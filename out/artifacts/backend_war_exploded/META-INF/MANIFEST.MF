@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: polina
+Build-Jdk: version 18.0.1
+Implementation-Title: backend
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.back
+Main-Class: ${start-class}
+
