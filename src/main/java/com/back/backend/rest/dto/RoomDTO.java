@@ -1,4 +1,4 @@
-package com.back.backend.rest;
+package com.back.backend.rest.dto;
 
 public class    RoomDTO {
     private Integer id;
