@@ -3,11 +3,11 @@ package com.back.backend.rest;
 
 import com.back.backend.classes.Player;
 import com.back.backend.classes.Room;
+import com.back.backend.rest.dto.PlayerDTO;
+import com.back.backend.rest.dto.RoomDTO;
 import com.back.backend.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +27,8 @@ public class PlayerRestController {
 
 
     // создаёт нового юзера по имени и присваивает ID
-    @GetMapping("/user")  // вернуть на PostMapping после тестов
-    public PlayerDTO create(@RequestParam(value = "name") String name) {
+    @PostMapping("/user")  // вернуть на PostMapping после тестов
+    public PlayerDTO create(@RequestBody String name) {     //
         Player player = gameService.create(name);
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setName(player.getName());
