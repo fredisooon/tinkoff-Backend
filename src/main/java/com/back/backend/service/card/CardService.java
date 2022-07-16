@@ -28,13 +28,13 @@ public class CardService {
     }
 
     private String[] getAllCardNumbers() {
-        String[] colors = new String[10];
+        String[] cardNumbers = new String[10];
 
         for (int i = 0; i < 10; i++) {
-            colors[i] = Integer.toString(i);
+            cardNumbers[i] = Integer.toString(i);
         }
 
-        return colors;
+        return cardNumbers;
     }
 
     private String[] getNotNumberCards() {
