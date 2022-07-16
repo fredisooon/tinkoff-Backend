@@ -1,24 +1,30 @@
-package com.back.backend.service;
+package com.back.backend.service.card;
 
 import com.back.backend.classes.Card;
 import com.back.backend.classes.repo.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class CardService {
     @Autowired
     CardRepository cardRepository;
 
+    private final String host = "http://localhost:8080/";
+    private final String staticCardsName = "content/img/cards/";
+
+
     private String[] getColors() {
-        String[] colors = new String[4];
+        Colors[] colors = Colors.values();
+        String[] convertedColors = new String[colors.length];
 
-        colors[0] = "R";
-        colors[1] = "B";
-        colors[2] = "G";
-        colors[3] = "Y";
+        for (int colorIndex = 0; colorIndex < colors.length; colorIndex++) {
+            convertedColors[colorIndex] = colors[colorIndex].toString();
+        }
 
-        return colors;
+        return convertedColors;
     }
 
     private String[] getAllCardNumbers() {
@@ -43,12 +49,25 @@ public class CardService {
         return cards;
     }
 
-    private void createCardInDataBase(String color, String cardValue, String img) {
+    private String getPathForCard(String color, String cardValue) {
+        String pathName = this.host + this.staticCardsName + cardValue;
+
+        if (Objects.equals(cardValue, "+4") || Objects.equals(cardValue, "color")) {
+            pathName += ".png";
+        } else {
+            pathName += color + ".png";
+        }
+
+        return pathName;
+    }
+
+    private void createCardInDataBase(String color, String cardValue) {
         Card firstCard = new Card();
+        String pathName = this.getPathForCard(color, cardValue);
 
         firstCard.setCardValue(cardValue);
         firstCard.setColor(color);
-        firstCard.setImg(img);
+        firstCard.setImg(pathName);
 
         cardRepository.save(firstCard);
     }
@@ -59,10 +78,10 @@ public class CardService {
 
         for (String color : colors) {
             for (int cardIndex = 0; cardIndex < cardNumbers.length; cardIndex++) {
-                this.createCardInDataBase(color, cardNumbers[cardIndex], "img");
+                this.createCardInDataBase(color, cardNumbers[cardIndex]);
 
                 if (cardIndex != 0) {
-                    this.createCardInDataBase(color, cardNumbers[cardIndex], "img");
+                    this.createCardInDataBase(color, cardNumbers[cardIndex]);
                 }
             }
         }
@@ -74,10 +93,10 @@ public class CardService {
 
         for (String color : colors) {
             for (int cardIndex = 0; cardIndex < cards.length; cardIndex++) {
-                this.createCardInDataBase(color, cards[cardIndex], "img");
+                this.createCardInDataBase(color, cards[cardIndex]);
 
                 if (cardIndex < cards.length - 2) {
-                    this.createCardInDataBase(color, cards[cardIndex], "img");
+                    this.createCardInDataBase(color, cards[cardIndex]);
                 }
             }
         }
