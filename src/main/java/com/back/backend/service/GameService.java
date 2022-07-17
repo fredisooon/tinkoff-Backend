@@ -1,5 +1,6 @@
 package com.back.backend.service;
 
+import com.back.backend.classes.Game;
 import com.back.backend.classes.Player;
 import com.back.backend.classes.Room;
 import com.back.backend.classes.repo.PlayerRepository;
@@ -31,7 +32,7 @@ public class GameService {
 
     public Room createRoom(String name) {
         Room room = new Room();
-        room.setGameId(1);          // что делать с
+        room.setGame(new Game());          // что делать с
         room.setName(name);
         room.setMaxCount(2);
         room.setCount(0);

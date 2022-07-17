@@ -3,57 +3,37 @@ package com.back.backend.classes;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "game")
 public class Game {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
-    private Integer currentCardIndex;   // foreign key
-    private Integer currentUserTurn;    // foreign key
-
-    private Integer bankDeck;   // foreign key
-    private Integer gameDeck;   // foreign key
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private boolean isOver;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Deck bankDeck;
 
-    public Integer getId() {
-        return id;
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    private Deck gameDeck;
 
-    public void setId(Integer id) {
+    @OneToOne(cascade = CascadeType.ALL)
+    private Card currentCard;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Player currentPlayerTurn;
+
+    public Game() {}
+
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getCurrentCardIndex() {
-        return currentCardIndex;
-    }
-
-    public void setCurrentCardIndex(Integer currentCardIndex) {
-        this.currentCardIndex = currentCardIndex;
-    }
-
-    public Integer getCurrentUserTurn() {
-        return currentUserTurn;
-    }
-
-    public void setCurrentUserTurn(Integer currentUserTurn) {
-        this.currentUserTurn = currentUserTurn;
-    }
-
-    public Integer getBankDeck() {
-        return bankDeck;
-    }
-
-    public void setBankDeck(Integer bankDeck) {
+    public Game(Long id, boolean isOver, Deck bankDeck, Deck gameDeck, Card currentCard, Player currentPlayerTurn) {
+        this.id = id;
+        this.isOver = isOver;
         this.bankDeck = bankDeck;
-    }
-
-    public Integer getGameDeck() {
-        return gameDeck;
-    }
-
-    public void setGameDeck(Integer gameDeck) {
         this.gameDeck = gameDeck;
+        this.currentCard = currentCard;
+        this.currentPlayerTurn = currentPlayerTurn;
     }
 
     public boolean isOver() {
@@ -62,5 +42,41 @@ public class Game {
 
     public void setOver(boolean over) {
         isOver = over;
+    }
+
+    public Deck getBankDeck() {
+        return bankDeck;
+    }
+
+    public void setBankDeck(Deck bankDeck) {
+        this.bankDeck = bankDeck;
+    }
+
+    public Deck getGameDeck() {
+        return gameDeck;
+    }
+
+    public void setGameDeck(Deck gameDeck) {
+        this.gameDeck = gameDeck;
+    }
+
+    public Card getCurrentCard() {
+        return currentCard;
+    }
+
+    public void setCurrentCard(Card currentCard) {
+        this.currentCard = currentCard;
+    }
+
+    public Player getCurrentPlayerTurn() {
+        return currentPlayerTurn;
+    }
+
+    public void setCurrentPlayerTurn(Player currentPlayerTurn) {
+        this.currentPlayerTurn = currentPlayerTurn;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
