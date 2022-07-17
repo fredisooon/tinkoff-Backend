@@ -5,6 +5,7 @@ import com.back.backend.classes.repo.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Objects;
 
 @Service
@@ -12,8 +13,8 @@ public class CardService {
     @Autowired
     CardRepository cardRepository;
 
-    private final String host = "http://localhost:8080/";
-    private final String staticCardsName = "content/img/cards/";
+    private final String STATIC_CARDS_PATH = "content/img/cards/";
+    private final int MAX_CARD_COUNT = 108;
 
 
     private String[] getColors() {
@@ -50,7 +51,7 @@ public class CardService {
     }
 
     private String getPathForCard(String color, String cardValue) {
-        String pathName = this.host + this.staticCardsName + cardValue;
+        String pathName = this.STATIC_CARDS_PATH + cardValue;
 
         if (Objects.equals(cardValue, "+4") || Objects.equals(cardValue, "color")) {
             pathName += ".png";
@@ -87,7 +88,7 @@ public class CardService {
         }
     }
 
-    public void initializeNotNumbersCards() {
+    private void initializeNotNumbersCards() {
         String[] colors = this.getColors();
         String[] cards = this.getNotNumberCards();
 
@@ -103,7 +104,15 @@ public class CardService {
 
     }
 
-     public void initializeCards() {
+    @PostConstruct
+    public void initializeCards() {
+        long cardsCount = cardRepository.count();
+
+        if (cardsCount == MAX_CARD_COUNT) {
+            return;
+        }
+
+        cardRepository.deleteAll();
         this.initializeNumberCard();
         this.initializeNotNumbersCards();
     }
