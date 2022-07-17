@@ -41,13 +41,13 @@ public class GameService {
 
     public Optional<Player> getPerson(int id) {
         Player player = new Player();
-        Optional<Player> byId = playerRepository.findById(id);
+        Optional<Player> byId = playerRepository.findById((long) id);
         return byId;
     }
 
     public  Optional<Room> roomById(int id) {
         Room room = new Room();
-        Optional<Room> byId = roomRepository.findById(id);
+        Optional<Room> byId = roomRepository.findById((long) id);
         return byId;
     }
 }
