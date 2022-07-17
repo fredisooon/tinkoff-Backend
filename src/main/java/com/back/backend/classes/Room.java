@@ -44,4 +44,9 @@ public class Room {
     public void setGameId(Integer gameId) {
         this.gameId = gameId;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
 }
