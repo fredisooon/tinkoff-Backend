@@ -27,7 +27,7 @@ public class RoomRestController {
         roomDTO.setName(room.getName());
         roomDTO.setMaxCount(room.getMaxCount());
         roomDTO.setCount(room.getCount());
-        roomDTO.setGameId(room.getGameId());
+        roomDTO.setGameId(room.getGame().getId());
         return roomDTO;
     }
 
@@ -39,7 +39,7 @@ public class RoomRestController {
         roomDTO.setId(optionalRoom.get().getId());
         roomDTO.setName(optionalRoom.get().getName());
         roomDTO.setCount(optionalRoom.get().getCount());
-        roomDTO.setGameId(optionalRoom.get().getGameId());
+        roomDTO.setGameId(optionalRoom.get().getGame().getId());
         roomDTO.setMaxCount(optionalRoom.get().getMaxCount());
 
         return roomDTO;
@@ -55,7 +55,7 @@ public class RoomRestController {
             tmpRoomDTO.setName(room.getName());
             tmpRoomDTO.setCount(room.getCount());
             tmpRoomDTO.setMaxCount(room.getMaxCount());
-            tmpRoomDTO.setGameId(room.getGameId());
+            tmpRoomDTO.setGameId(room.getGame().getId());
             roomDTOList.add(tmpRoomDTO);
         }
         return roomDTOList;

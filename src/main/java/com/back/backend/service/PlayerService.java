@@ -24,7 +24,7 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
-    public Optional<Player> getPerson(int id) {
+    public Optional<Player> getPerson(long id) {
         Player player = new Player();
         Optional<Player> byId = playerRepository.findById(id);
         return byId;

@@ -1,6 +1,7 @@
 package com.back.backend.service;
 
 
+import com.back.backend.classes.Game;
 import com.back.backend.classes.Room;
 import com.back.backend.classes.repo.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,14 @@ public class RoomService {
 
     public Room createRoom(String name) {
         Room room = new Room();
-        room.setGameId(1);
+        room.setGame(new Game());
         room.setName(name);
         room.setMaxCount(2);
         room.setCount(0);
         return roomRepository.save(room);
     }
 
-    public Optional<Room> roomById(int id) {
+    public Optional<Room> roomById(long id) {
         Room room = new Room();
         Optional<Room> byId = roomRepository.findById(id);
         return byId;
