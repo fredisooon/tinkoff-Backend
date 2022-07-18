@@ -7,14 +7,22 @@ import javax.persistence.*;
 @Entity
 public class Card {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    private int value;
-
-    private int color; // или Enum
-
+    private String cardValue;
+    private String color;
     private String img;
+
+    public Card(Integer id, String cardValue, String color, String img) {
+        this.id = id;
+        this.cardValue = cardValue;
+        this.color = color;
+        this.img = img;
+    }
+
+    public Card() {
+
+    }
 
     public Integer getId() {
         return id;
@@ -24,19 +32,19 @@ public class Card {
         this.id = id;
     }
 
-    public int getValue() {
-        return value;
+    public String getCardValue() {
+        return cardValue;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setCardValue(String cardValue) {
+        this.cardValue = cardValue;
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
     }
 
