@@ -61,10 +61,12 @@ public class GameService {
     }
 
     private void fillPlayersDeck(Game game, List<Player> players, Deck bankDeck) {
+        final int START_GAME_CARDS_COUNT = 7;
+
         for (Player player : players) {
             Deck playerDeck = new Deck();
 
-            for (int j = 0; j < 7; j++) {
+            for (int j = 0; j < START_GAME_CARDS_COUNT; j++) {
                 Card randomCard = deckService.extractRandomCardFromDeck(bankDeck);
                 playerDeck.addCard(randomCard);
             }

@@ -22,11 +22,13 @@ public class Room {
 
     public void addPlayer(Player player) {
         this.players.add(player);
+        this.count += 1;
         player.setRoom(this);
     }
 
     public void removePlayer(Player player) {
         this.players.remove(player);
+        this.count -= 1;
         player.setRoom(null);
     }
 
