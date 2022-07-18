@@ -3,6 +3,7 @@ package com.back.backend.classes;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Player {
@@ -47,5 +48,18 @@ public class Player {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return Objects.equals(id, player.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
