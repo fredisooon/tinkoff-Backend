@@ -1,5 +1,6 @@
 package com.back.backend.service;
 
+import com.back.backend.classes.Game;
 import com.back.backend.classes.Player;
 import com.back.backend.classes.Room;
 import com.back.backend.classes.repo.PlayerRepository;
@@ -31,20 +32,20 @@ public class GameService {
 
     public Room createRoom(String name) {
         Room room = new Room();
-        room.setGameId(1);          // что делать с
+        room.setGame(new Game());
         room.setName(name);
         room.setMaxCount(2);
         room.setCount(0);
         return roomRepository.save(room);
     }
 
-    public Optional<Player> getPerson(int id) {
+    public Optional<Player> getPerson(long id) {
         Player player = new Player();
         Optional<Player> byId = playerRepository.findById(id);
         return byId;
     }
 
-    public  Optional<Room> roomById(int id) {
+    public  Optional<Room> roomById(long id) {
         Room room = new Room();
         Optional<Room> byId = roomRepository.findById(id);
         return byId;
