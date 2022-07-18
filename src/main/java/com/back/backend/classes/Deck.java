@@ -1,6 +1,7 @@
 package com.back.backend.classes;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ public class Deck {
     private Long id;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
     public List<Card> getCards() {
         return cards;
@@ -27,6 +28,13 @@ public class Deck {
 
     public Long getId() {
         return id;
+    }
+    public void addCard(Card card) {
+        this.cards.add(card);
+    }
+
+    public void removeCard(Card card) {
+        this.cards.remove(card);
     }
 
     @Override
