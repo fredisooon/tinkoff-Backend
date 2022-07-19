@@ -28,38 +28,6 @@ public class GameService {
     @Autowired
     private PlayerDeckRepository playerDeckRepository;
 
-    public List<Player> list() {
-        return playerRepository.findAll();
-    }
-
-    public Player create(String name) {
-        Player player = new Player();
-        player.setName(name);
-        Player save = playerRepository.save(player);
-        return save;
-    }
-
-    public Room createRoom(String name) {
-        Room room = new Room();
-        room.setGame(new Game());
-        room.setName(name);
-        room.setMaxCount(2);
-        room.setCount(0);
-        return roomRepository.save(room);
-    }
-
-    public Optional<Player> getPerson(long id) {
-        Player player = new Player();
-        Optional<Player> byId = playerRepository.findById(id);
-        return byId;
-    }
-
-    public  Optional<Room> roomById(long id) {
-        Room room = new Room();
-        Optional<Room> byId = roomRepository.findById(id);
-        return byId;
-    }
-
     private void fillPlayersDeck(Game game, List<Player> players, Deck bankDeck) {
         final int START_GAME_CARDS_COUNT = 7;
 

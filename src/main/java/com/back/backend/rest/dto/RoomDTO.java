@@ -1,17 +1,17 @@
 package com.back.backend.rest.dto;
 
 public class    RoomDTO {
-    private Integer id;
+    private Long id;
     private String name;
     private int maxCount;
     private int count;
-    private int gameId;     // foreign key;
+    private Long gameId;     // foreign key;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -39,11 +39,11 @@ public class    RoomDTO {
         this.count = count;
     }
 
-    public int getGameId() {
+    public Long getGameId() {
         return gameId;
     }
 
-    public void setGameId(int gameId) {
+    public void setGameId(Long gameId) {
         this.gameId = gameId;
     }
 }
