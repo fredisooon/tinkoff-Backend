@@ -11,7 +11,7 @@ public class Deck {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<Card> cards = new ArrayList<>();
 
     public List<Card> getCards() {

@@ -2,10 +2,16 @@ package com.back.backend.service;
 
 import com.back.backend.classes.*;
 import com.back.backend.classes.repo.*;
+import com.back.backend.exceptions.*;
+import com.back.backend.rest.dto.GameDTO;
+import com.back.backend.utils.GameMapper;
+import com.back.backend.utils.OptionalWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,6 +33,12 @@ public class GameService {
 
     @Autowired
     private PlayerDeckRepository playerDeckRepository;
+
+    @Autowired
+    private PlayerDeckService playerDeckService;
+
+    @Autowired
+    private GameMapper gameMapper;
 
     private void fillPlayersDeck(Game game, List<Player> players, Deck bankDeck) {
         final int START_GAME_CARDS_COUNT = 7;
@@ -71,5 +83,48 @@ public class GameService {
         roomRepository.save(room);
 
         this.fillPlayersDeck(newGame, players, bankDeck);
+    }
+
+    public GameDTO getRandomCardForPlayer(long playerId, long roomId) throws PlayerDeckNotFoundException, NoAccessException, OptionalNotFoundException {
+        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        Optional<Player> playerOptional = playerRepository.findById(playerId);
+
+        OptionalWorker.checkOptional(roomOptional);
+        OptionalWorker.checkOptional(playerOptional);
+
+        Room room = roomOptional.get();
+        Player player = playerOptional.get();
+        Game game = room.getGame();
+
+        if (!Objects.equals(game.getCurrentPlayerTurn().getId(), player.getId())) {
+            throw new NoAccessException("Отказано в доступе");
+        }
+
+        Deck bankDeck = game.getBankDeck();
+        Deck gameDeck = game.getGameDeck();
+
+        if (bankDeck.getCards().size() == 0) {
+            bankDeck.setCards(gameDeck.getCards());
+            gameDeck.setCards(new ArrayList<>());
+        }
+
+        Card randomCard = deckService.extractRandomCardFromDeck(bankDeck);
+        PlayerDeck playerDeck = playerDeckService.getPlayerDeck(player, game);
+        playerDeck.getDeck().addCard(randomCard);
+        game.setCurrentPlayerTurn(this.getOpponent(player, room.getUsers()));
+
+        deckRepository.save(bankDeck);
+        deckRepository.save(gameDeck);
+        playerDeckRepository.save(playerDeck);
+        gameRepository.save(game);
+
+        return gameMapper.mapToDTO(game, player, room);
+    }
+
+    private Player getOpponent(Player currentPlayer, List<Player> allPlayers) {
+        Player firstPlayer = allPlayers.get(0);
+        Player secondPlayer = allPlayers.get(1);
+
+        return Objects.equals(firstPlayer.getId(), currentPlayer.getId()) ? secondPlayer : firstPlayer;
     }
 }
