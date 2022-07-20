@@ -185,6 +185,11 @@ public class GameService {
         gameDeck.addCard(game.getCurrentCard());
         game.setCurrentCard(card);
 
+        if (playerDeck.getCards().size() == 0) {
+            game.setOver(true);
+            game.setCurrentPlayerTurn(player);
+        }
+
         deckRepository.save(gameDeck);
         deckRepository.save(playerDeck);
         cardRepository.save(card);
