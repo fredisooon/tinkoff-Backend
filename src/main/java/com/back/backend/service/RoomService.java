@@ -4,6 +4,8 @@ package com.back.backend.service;
 import com.back.backend.classes.Game;
 import com.back.backend.classes.Room;
 import com.back.backend.classes.repo.RoomRepository;
+import com.back.backend.exceptions.OptionalNotFoundException;
+import com.back.backend.utils.OptionalWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,23 +31,15 @@ public class RoomService {
         return roomRepository.save(room);
     }
 
-    public Optional<Room> roomById(long id) {
-        Room room = new Room();
-        Optional<Room> byId = roomRepository.findById(id);
-        return byId;
+    public Room roomById(long id) throws OptionalNotFoundException {
+        Optional<Room> roomOptional = roomRepository.findById(id);
+
+        OptionalWorker.checkOptional(roomOptional);
+
+        return roomOptional.get();
     }
 
-    public boolean compareRoomName(String roomName, String searchName) {
-        String searchNameLowCase = searchName.toLowerCase();
-        if (roomName.contains(searchName) || roomName.equalsIgnoreCase(searchName) ||
-                roomName.contains(searchNameLowCase) || roomName.equalsIgnoreCase(searchNameLowCase)) {
-            return true;
-        }
-        return false;
-    }
     public List<Room> findByNameContaining(String name) {
-
         return roomRepository.findByNameContainingIgnoreCase(name);
     }
-
 }

@@ -2,13 +2,13 @@ package com.back.backend.rest;
 
 
 import com.back.backend.classes.Player;
+import com.back.backend.exceptions.OptionalNotFoundException;
 import com.back.backend.rest.dto.PlayerDTO;
 import com.back.backend.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -37,10 +37,8 @@ public class PlayerRestController {
 
     // нужно ли описывать Entity для Optional<Player>, чтобы добавить туда getId getName для присвоения значений DTO?
     @GetMapping("/getuser")
-    public Optional<Player> getperson(@RequestParam(value = "id") Integer id) {
-        //PlayerDTO playerDTO = new PlayerDTO();
-        //playerDTO.setId(player.get)
-        return playerService.getPerson(id);
+    public Player getPerson(@RequestParam(value = "id") Integer id) throws OptionalNotFoundException {
+        return playerService.getPlayer(id);
     }
 
 

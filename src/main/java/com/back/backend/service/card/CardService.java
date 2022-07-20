@@ -2,11 +2,14 @@ package com.back.backend.service.card;
 
 import com.back.backend.classes.Card;
 import com.back.backend.classes.repo.CardRepository;
+import com.back.backend.exceptions.OptionalNotFoundException;
+import com.back.backend.utils.OptionalWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CardService {
@@ -101,7 +104,14 @@ public class CardService {
                 }
             }
         }
+    }
 
+    public Card getCard(int id) throws OptionalNotFoundException {
+        Optional<Card> cardOptional = cardRepository.findById(id);
+
+        OptionalWorker.checkOptional(cardOptional);
+
+        return cardOptional.get();
     }
 
     @PostConstruct

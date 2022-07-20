@@ -2,6 +2,7 @@ package com.back.backend.rest;
 
 
 import com.back.backend.classes.Room;
+import com.back.backend.exceptions.OptionalNotFoundException;
 import com.back.backend.rest.dto.RoomDTO;
 import com.back.backend.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/room")
@@ -33,14 +33,15 @@ public class RoomRestController {
 
 
     @GetMapping("{id}")
-    public RoomDTO roomById(@PathVariable Integer id) {
-        Optional<Room> optionalRoom = roomService.roomById(id);
+    public RoomDTO roomById(@PathVariable Integer id) throws OptionalNotFoundException {
+        Room room = roomService.roomById(id);
+
         RoomDTO roomDTO = new RoomDTO();
-        roomDTO.setId(optionalRoom.get().getId());
-        roomDTO.setName(optionalRoom.get().getName());
-        roomDTO.setCount(optionalRoom.get().getCount());
-        roomDTO.setGameId(optionalRoom.get().getGame().getId());
-        roomDTO.setMaxCount(optionalRoom.get().getMaxCount());
+        roomDTO.setId(room.getId());
+        roomDTO.setName(room.getName());
+        roomDTO.setCount(room.getCount());
+        roomDTO.setGameId(room.getGame().getId());
+        roomDTO.setMaxCount(room.getMaxCount());
 
         return roomDTO;
     }
