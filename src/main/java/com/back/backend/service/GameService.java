@@ -140,7 +140,7 @@ public class GameService {
         return Objects.equals(firstPlayer.getId(), currentPlayer.getId()) ? secondPlayer : firstPlayer;
     }
 
-    public GameDTO putPlayerCard(PutCardRequest info) throws OptionalNotFoundException, NoAccessException {
+    public GameDTO putPlayerCard(PutCardRequest info) throws OptionalNotFoundException {
         Player player = playerService.getPlayer(info.getUserId());
         Room room = roomService.roomById(info.getRoomId());
         Card card = cardService.getCard(info.getCardId());
@@ -150,16 +150,16 @@ public class GameService {
         Player opponent = this.getOpponent(player, room.getUsers());
 
         if (!Objects.equals(player.getId(), game.getCurrentPlayerTurn().getId())) {
-            throw new NoAccessException("Отказано в доступе");
+            return gameMapper.mapToDTO(game, player, room);
         }
 
         if (
             !Objects.equals(game.getCurrentCard().getCardValue(), card.getCardValue()) &&
-            !Objects.equals(game.getCurrentCard().getCardValue(), card.getColor()) &&
+            !Objects.equals(game.getCurrentCard().getColor(), card.getColor()) &&
             !Objects.equals(card.getCardValue(), "+4") &&
             !Objects.equals(card.getCardValue(), "color")
         ) {
-            throw new NoAccessException("Отказано в доступе");
+            return gameMapper.mapToDTO(game, player, room);
         }
 
         if (
