@@ -1,6 +1,7 @@
 package com.back.backend.classes;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,16 +18,18 @@ public class Room {
     private Game game;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
-    private List<Player> players;
+    private List<Player> players = new ArrayList<>();
 
 
     public void addPlayer(Player player) {
         this.players.add(player);
+        this.count += 1;
         player.setRoom(this);
     }
 
     public void removePlayer(Player player) {
         this.players.remove(player);
+        this.count -= 1;
         player.setRoom(null);
     }
 

@@ -7,31 +7,19 @@ import java.util.Objects;
 
 @Embeddable
 public class PlayerDeckId implements Serializable {
-    @Column(name = "deck_id")
-    private Long deckId;
-
     @Column(name = "game_id")
     private Long gameId;
 
     @Column(name = "player_id")
     private Long playerId;
 
-    public PlayerDeckId(Long deckId, Long gameId, Long playerId) {
-        this.deckId = deckId;
+    public PlayerDeckId(Long gameId, Long playerId) {
         this.gameId = gameId;
         this.playerId = playerId;
     }
 
     public PlayerDeckId() {
 
-    }
-
-    public Long getDeckId() {
-        return deckId;
-    }
-
-    public void setDeckId(Long deckId) {
-        this.deckId = deckId;
     }
 
     public Long getGameId() {
@@ -55,11 +43,11 @@ public class PlayerDeckId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlayerDeckId that = (PlayerDeckId) o;
-        return Objects.equals(deckId, that.deckId) && Objects.equals(gameId, that.gameId) && Objects.equals(playerId, that.playerId);
+        return Objects.equals(gameId, that.gameId) && Objects.equals(playerId, that.playerId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(deckId, gameId, playerId);
+        return Objects.hash(gameId, playerId);
     }
 }
