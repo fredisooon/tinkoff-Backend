@@ -4,11 +4,11 @@ import com.back.backend.classes.Card;
 import com.back.backend.classes.Deck;
 import com.back.backend.classes.repo.CardRepository;
 import com.back.backend.classes.repo.DeckRepository;
-import com.back.backend.utils.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class DeckService {
@@ -26,12 +26,18 @@ public class DeckService {
     }
 
     public Card extractRandomCardFromDeck(Deck deck) {
-        int randomValue = Random.getRandomValue(0, deck.getCards().size() - 1);
+        int randomValue = this.getRandomValue(0, deck.getCards().size() - 1);
         Card randomCard = deck.getCards().get(randomValue);
 
         deck.removeCard(randomCard);
         deckRepository.save(deck);
 
         return randomCard;
+    }
+
+    private int getRandomValue(int min, int max) {
+        Random random = new Random();
+
+        return random.nextInt(max - min) + min;
     }
 }
