@@ -19,7 +19,7 @@ public class DeckService {
     DeckRepository deckRepository;
 
     public void initializeBankDeck(Deck deck) {
-        List<Card> allCards = (List<Card>) cardRepository.findAll();
+        List<Card> allCards = cardRepository.findAll();
 
         deck.setCards(allCards);
         deckRepository.save(deck);
