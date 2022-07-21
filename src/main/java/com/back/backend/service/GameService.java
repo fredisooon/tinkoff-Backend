@@ -18,8 +18,6 @@ import java.util.Objects;
 public class GameService {
 
     @Autowired
-    private PlayerRepository playerRepository;
-    @Autowired
     private RoomRepository roomRepository;
 
     @Autowired
@@ -140,17 +138,17 @@ public class GameService {
         return Objects.equals(firstPlayer.getId(), currentPlayer.getId()) ? secondPlayer : firstPlayer;
     }
 
-    public GameDTO putPlayerCard(PutCardRequest info) throws OptionalNotFoundException {
-        Player player = playerService.getPlayer(info.getUserId());
-        Room room = roomService.roomById(info.getRoomId());
-        Card card = cardService.getCard(info.getCardId());
+    public GameDTO putPlayerCard(PutCardRequest putCardRequest) throws OptionalNotFoundException, NoAccessException {
+        Player player = playerService.getPlayer(putCardRequest.getUserId());
+        Room room = roomService.roomById(putCardRequest.getRoomId());
+        Card card = cardService.getCard(putCardRequest.getCardId());
         Game game = room.getGame();
         Deck playerDeck = playerDeckService.getPlayerDeck(player, game).getDeck();
         Deck gameDeck = game.getGameDeck();
         Player opponent = this.getOpponent(player, room.getUsers());
 
         if (!Objects.equals(player.getId(), game.getCurrentPlayerTurn().getId())) {
-            return gameMapper.mapToDTO(game, player, room);
+            throw new NoAccessException("Отказано в доступе");
         }
 
         if (
@@ -159,7 +157,7 @@ public class GameService {
             !Objects.equals(card.getCardValue(), "+4") &&
             !Objects.equals(card.getCardValue(), "color")
         ) {
-            return gameMapper.mapToDTO(game, player, room);
+            throw new NoAccessException("Отказано в доступе");
         }
 
         if (
@@ -176,9 +174,9 @@ public class GameService {
             case "+4" -> this.extractRandomCardFromBankDeckForPlayer(opponent, game, 4);
         }
 
-        if (info.getNewColor() != null &&
+        if (putCardRequest.getNewColor() != null &&
                 (Objects.equals(card.getCardValue(), "+4") || Objects.equals(card.getCardValue(), "color"))) {
-            card.setColor(info.getNewColor());
+            card.setColor(putCardRequest.getNewColor());
         }
 
         playerDeck.removeCard(card);
