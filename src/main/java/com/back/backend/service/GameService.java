@@ -174,14 +174,17 @@ public class GameService {
             case "+4" -> this.extractRandomCardFromBankDeckForPlayer(opponent, game, 4);
         }
 
-        if (putCardRequest.getNewColor() != null &&
-                (Objects.equals(card.getCardValue(), "+4") || Objects.equals(card.getCardValue(), "color"))) {
-            card.setColor(putCardRequest.getNewColor());
-        }
-
         playerDeck.removeCard(card);
         gameDeck.addCard(game.getCurrentCard());
-        game.setCurrentCard(card);
+
+        if (putCardRequest.getNewColor() != null &&
+                (Objects.equals(card.getCardValue(), "+4") || Objects.equals(card.getCardValue(), "color"))) {
+            Card newCard = cardRepository.findByCardValueAndColor(card.getCardValue(), putCardRequest.getNewColor());
+
+            game.setCurrentCard(newCard);
+        } else {
+            game.setCurrentCard(card);
+        }
 
         if (playerDeck.getCards().size() == 0) {
             game.setOver(true);
