@@ -2,6 +2,8 @@ package com.back.backend.service;
 
 import com.back.backend.classes.Player;
 import com.back.backend.classes.repo.PlayerRepository;
+import com.back.backend.rest.dto.PlayerDTO;
+import com.back.backend.utils.PlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,21 +15,30 @@ public class PlayerService {
 
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private PlayerMapper playerMapper;
 
-    public List<Player> listPlayer() {
-        return playerRepository.findAll();
+
+    public List<PlayerDTO> listPlayer() {
+        List<Player> playerList = playerRepository.findAll();
+        return playerMapper.mapToDTOList(playerList);
     }
 
-    public Player create(String name) {
+    public PlayerDTO create(String name) {
         Player player = new Player();
         player.setName(name);
-        return playerRepository.save(player);
+        playerRepository.save(player);
+        return playerMapper.mapToDTO(player);
     }
 
-    public Optional<Player> getPerson(long id) {
-        Player player = new Player();
-        Optional<Player> byId = playerRepository.findById(id);
-        return byId;
+    public Player getPerson(long id) {
+        Optional<Player> playerById = playerRepository.findById(id);
+        return playerById.get();
+    }
+
+    public PlayerDTO getPersonDTO(long id) {
+        Optional<Player> playerById = playerRepository.findById(id);
+        return playerMapper.mapToDTO(playerById.get());
     }
 
 }

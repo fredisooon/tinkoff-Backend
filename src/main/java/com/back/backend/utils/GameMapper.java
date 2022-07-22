@@ -2,7 +2,6 @@ package com.back.backend.utils;
 
 import com.back.backend.classes.*;
 import com.back.backend.exceptions.OptionalNotFoundException;
-import com.back.backend.exceptions.PlayerDeckNotFoundException;
 import com.back.backend.rest.dto.CardDTO;
 import com.back.backend.rest.dto.GameDTO;
 import com.back.backend.rest.dto.OpponentDTO;
