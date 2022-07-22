@@ -11,19 +11,24 @@ import java.util.List;
 public class PlayerMapper {
     public PlayerDTO mapToDTO(Player player) {
         PlayerDTO playerDTO = new PlayerDTO();
+
         playerDTO.setId(player.getId());
         playerDTO.setName(player.getName());
+
+        if (player.getRoom() != null) {
+            playerDTO.setRoomId(player.getRoom().getId());
+        }
+
         return playerDTO;
     }
 
     public List<PlayerDTO> mapToDTOList(List<Player> playerList) {
         List<PlayerDTO> playerDTOList = new ArrayList<>();
+
         for (Player player : playerList) {
-            PlayerDTO tmpPlayerDTO = new PlayerDTO();
-            tmpPlayerDTO.setId(player.getId());
-            tmpPlayerDTO.setName(player.getName());
-            playerDTOList.add(tmpPlayerDTO);
+            playerDTOList.add(this.mapToDTO(player));
         }
+
         return playerDTOList;
     }
 }
