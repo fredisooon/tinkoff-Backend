@@ -2,6 +2,8 @@ package com.back.backend.service;
 
 import com.back.backend.classes.Player;
 import com.back.backend.classes.repo.PlayerRepository;
+import com.back.backend.rest.dto.PlayerDTO;
+import com.back.backend.utils.PlayerMapper;
 import com.back.backend.exceptions.OptionalNotFoundException;
 import com.back.backend.utils.OptionalWorker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +17,27 @@ public class PlayerService {
 
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private PlayerMapper playerMapper;
 
-    public List<Player> listPlayer() {
-        return playerRepository.findAll();
+
+    public List<PlayerDTO> listPlayer() {
+        List<Player> playerList = playerRepository.findAll();
+        return playerMapper.mapToDTOList(playerList);
     }
 
-    public Player create(String name) {
+    public PlayerDTO create(String name) {
         Player player = new Player();
 
         player.setName(name);
+        playerRepository.save(player);
 
-        return playerRepository.save(player);
+        return playerMapper.mapToDTO(player);
+    }
+
+    public PlayerDTO getPersonDTO(long id) {
+        Optional<Player> playerById = playerRepository.findById(id);
+        return playerMapper.mapToDTO(playerById.get());
     }
 
     public Player getPlayer(long id) throws OptionalNotFoundException {

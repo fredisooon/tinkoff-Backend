@@ -18,6 +18,8 @@ import java.util.Objects;
 public class GameService {
 
     @Autowired
+    private PlayerRepository playerRepository;
+    @Autowired
     private RoomRepository roomRepository;
 
     @Autowired
@@ -136,6 +138,14 @@ public class GameService {
         Player secondPlayer = allPlayers.get(1);
 
         return Objects.equals(firstPlayer.getId(), currentPlayer.getId()) ? secondPlayer : firstPlayer;
+    }
+
+    public GameDTO getPlayerGame (Long userId, Long roomId) throws OptionalNotFoundException {
+        Room room = roomService.roomById(roomId);
+        Game game = room.getGame();
+        Player player = playerService.getPerson(userId);
+
+        return gameMapper.mapToDTO(game, player, room);
     }
 
     public GameDTO putPlayerCard(PutCardRequest putCardRequest) throws OptionalNotFoundException, NoAccessException {
