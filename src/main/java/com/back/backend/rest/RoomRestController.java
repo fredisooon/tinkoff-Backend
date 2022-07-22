@@ -1,6 +1,7 @@
 package com.back.backend.rest;
 
 
+import com.back.backend.exceptions.OptionalNotFoundException;
 import com.back.backend.rest.dto.RoomDTO;
 import com.back.backend.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,13 @@ public class RoomRestController {
     @Autowired
     private RoomService roomService;
 
-
     @PostMapping()
     public RoomDTO createNewRoom(@RequestBody String name) {
         return roomService.createRoom(name);
     }
 
     @GetMapping("{id}")
-    public RoomDTO roomById(@PathVariable Integer id) {
+    public RoomDTO roomById(@PathVariable Integer id) throws OptionalNotFoundException {
         return roomService.roomByIdDTO(id);
     }
 

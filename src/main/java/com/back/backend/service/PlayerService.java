@@ -4,6 +4,8 @@ import com.back.backend.classes.Player;
 import com.back.backend.classes.repo.PlayerRepository;
 import com.back.backend.rest.dto.PlayerDTO;
 import com.back.backend.utils.PlayerMapper;
+import com.back.backend.exceptions.OptionalNotFoundException;
+import com.back.backend.utils.OptionalWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +28,24 @@ public class PlayerService {
 
     public PlayerDTO create(String name) {
         Player player = new Player();
+
         player.setName(name);
         playerRepository.save(player);
-        return playerMapper.mapToDTO(player);
-    }
 
-    public Player getPerson(long id) {
-        Optional<Player> playerById = playerRepository.findById(id);
-        return playerById.get();
+        return playerMapper.mapToDTO(player);
     }
 
     public PlayerDTO getPersonDTO(long id) {
         Optional<Player> playerById = playerRepository.findById(id);
         return playerMapper.mapToDTO(playerById.get());
+    }
+
+    public Player getPerson(long id) throws OptionalNotFoundException {
+        Optional<Player> playerOptional = playerRepository.findById(id);
+
+        OptionalWorker.checkOptional(playerOptional);
+
+        return playerOptional.get();
     }
 
 }

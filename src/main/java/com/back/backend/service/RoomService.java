@@ -3,9 +3,11 @@ package com.back.backend.service;
 
 import com.back.backend.classes.Game;
 import com.back.backend.classes.Room;
-import com.back.backend.rest.dto.RoomDTO;
 import com.back.backend.classes.repo.RoomRepository;
 import com.back.backend.utils.RoomMapper;
+import com.back.backend.exceptions.OptionalNotFoundException;
+import com.back.backend.utils.OptionalWorker;
+import com.back.backend.rest.dto.RoomDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,19 +37,19 @@ public class RoomService {
         return roomMapper.mapToDTO(room);
     }
 
-    public Room roomById(long id) {
-        Optional<Room> byId = roomRepository.findById(id);
-        return byId.get();
+    public Room roomById(long id) throws OptionalNotFoundException {
+        Optional<Room> roomOptional = roomRepository.findById(id);
+
+        OptionalWorker.checkOptional(roomOptional);
+
+        return roomOptional.get();
     }
 
-    public RoomDTO roomByIdDTO(long id) {
-        Optional<Room> roomById = roomRepository.findById(id);
-        return roomMapper.mapToDTO(roomById.get());
+    public RoomDTO roomByIdDTO(long id) throws OptionalNotFoundException {
+        return roomMapper.mapToDTO(this.roomById(id));
     }
 
     public List<RoomDTO> findByNameContaining(String name) {
-        List<Room> roomList = roomRepository.findByNameContainingIgnoreCase(name);
-        return roomMapper.mapToDTOList(roomList);
+        return roomMapper.mapToDTOList(roomRepository.findByNameContainingIgnoreCase(name));
     }
-
 }

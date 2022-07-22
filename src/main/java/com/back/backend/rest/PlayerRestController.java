@@ -15,7 +15,6 @@ public class PlayerRestController {
     @Autowired
     private PlayerService playerService;
 
-
     @GetMapping("/list")
     public List<PlayerDTO> list() {
         return playerService.listPlayer();
@@ -27,7 +26,7 @@ public class PlayerRestController {
     }
 
     @GetMapping("/getuser")
-    public PlayerDTO getperson(@RequestParam(value = "id") Integer id) {
+    public PlayerDTO getPerson(@RequestParam(value = "id") Integer id) {
         return playerService.getPersonDTO(id);
     }
 }
