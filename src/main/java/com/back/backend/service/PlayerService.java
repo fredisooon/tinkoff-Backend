@@ -40,7 +40,7 @@ public class PlayerService {
         return playerMapper.mapToDTO(playerById.get());
     }
 
-    public Player getPlayer(long id) throws OptionalNotFoundException {
+    public Player getPerson(long id) throws OptionalNotFoundException {
         Optional<Player> playerOptional = playerRepository.findById(id);
 
         OptionalWorker.checkOptional(playerOptional);

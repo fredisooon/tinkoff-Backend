@@ -45,7 +45,11 @@ public class RoomService {
         return roomOptional.get();
     }
 
-    public List<Room> findByNameContaining(String name) {
-        return roomRepository.findByNameContainingIgnoreCase(name);
+    public RoomDTO roomByIdDTO(long id) throws OptionalNotFoundException {
+        return roomMapper.mapToDTO(this.roomById(id));
+    }
+
+    public List<RoomDTO> findByNameContaining(String name) {
+        return roomMapper.mapToDTOList(roomRepository.findByNameContainingIgnoreCase(name));
     }
 }

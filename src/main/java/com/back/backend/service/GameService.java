@@ -118,7 +118,7 @@ public class GameService {
     }
 
     public GameDTO getRandomCardForPlayer(long playerId, long roomId) throws PlayerDeckNotFoundException, NoAccessException, OptionalNotFoundException {
-        Player player = playerService.getPlayer(playerId);
+        Player player = playerService.getPerson(playerId);
         Room room = roomService.roomById(roomId);
         Game game = room.getGame();
 
@@ -149,7 +149,7 @@ public class GameService {
     }
 
     public GameDTO putPlayerCard(PutCardRequest putCardRequest) throws OptionalNotFoundException, NoAccessException {
-        Player player = playerService.getPlayer(putCardRequest.getUserId());
+        Player player = playerService.getPerson(putCardRequest.getUserId());
         Room room = roomService.roomById(putCardRequest.getRoomId());
         Card card = cardService.getCard(putCardRequest.getCardId());
         Game game = room.getGame();
