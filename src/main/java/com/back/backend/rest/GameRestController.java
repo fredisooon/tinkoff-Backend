@@ -2,7 +2,6 @@ package com.back.backend.rest;
 
 import com.back.backend.exceptions.*;
 import com.back.backend.rest.requestsClasses.PutCardRequest;
-import com.back.backend.rest.dto.GameDTO;
 import com.back.backend.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +25,23 @@ public class GameRestController {
     }
 
     @GetMapping()
-    public GameDTO getGameDTO(@RequestParam(value = "roomId") Long roomId,
-                              @RequestParam(value = "userId") Long userId) throws OptionalNotFoundException {
-        return gameService.getPlayerGame(userId, roomId);
+    public ResponseEntity getGameDTO(@RequestParam(value = "roomId") Long roomId,
+                              @RequestParam(value = "userId") Long userId) {
+        try {
+            return ResponseEntity.ok(gameService.getPlayerGame(userId, roomId));
+        } catch (OptionalNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Не получилось загрузить игру");
+        }
     }
 
     @PutMapping("/card")
     public ResponseEntity putCard(@RequestBody PutCardRequest requestData) {
         try {
             return ResponseEntity.ok(gameService.putPlayerCard(requestData));
+        } catch (OptionalNotFoundException | NoAccessException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Не получилось положить карту");
         }
