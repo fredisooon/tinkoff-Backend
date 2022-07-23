@@ -26,13 +26,13 @@ public class PlayerService {
         return playerMapper.mapToDTOList(playerList);
     }
 
-    public PlayerDTO create(String name) {
+    public Player create(String name) {
         Player player = new Player();
 
         player.setName(name);
         playerRepository.save(player);
 
-        return playerMapper.mapToDTO(player);
+        return player;
     }
 
     public PlayerDTO getPersonDTO(long id) {
