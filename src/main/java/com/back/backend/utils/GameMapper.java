@@ -1,6 +1,8 @@
 package com.back.backend.utils;
 
 import com.back.backend.classes.*;
+import com.back.backend.classes.repo.PlayerRepository;
+import com.back.backend.classes.repo.RoomRepository;
 import com.back.backend.exceptions.OptionalNotFoundException;
 import com.back.backend.rest.dto.CardDTO;
 import com.back.backend.rest.dto.GameDTO;
@@ -18,9 +20,17 @@ public class GameMapper {
     @Autowired
     PlayerDeckService playerDeckService;
 
-    public GameDTO mapToDTO(Game game, Player player, Room room) throws OptionalNotFoundException {
+    @Autowired
+    RoomRepository roomRepository;
+
+    @Autowired
+    PlayerRepository playerRepository;
+
+    public GameDTO mapToDTO(Game game, long userId, long roomId) throws OptionalNotFoundException {
         GameDTO gameDTO = new GameDTO();
         CardDTO cardDTO = CardMapper.mapToDTO(game.getCurrentCard());
+        Room room = roomRepository.findById(roomId).get();
+        Player player = playerRepository.findById(userId).get();
 
         Deck playerDeck = this.playerDeckService.getPlayerDeck(player, game).getDeck();
         List<CardDTO> cards = CardMapper.listToDTO(playerDeck.getCards());

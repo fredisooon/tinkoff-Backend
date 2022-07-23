@@ -3,7 +3,6 @@ package com.back.backend.service;
 import com.back.backend.classes.*;
 import com.back.backend.classes.repo.*;
 import com.back.backend.exceptions.*;
-import com.back.backend.rest.dto.GameDTO;
 import com.back.backend.rest.requestsClasses.PutCardRequest;
 import com.back.backend.service.card.CardService;
 import com.back.backend.utils.GameMapper;
@@ -17,8 +16,6 @@ import java.util.Objects;
 @Service
 public class GameService {
 
-    @Autowired
-    private PlayerRepository playerRepository;
     @Autowired
     private RoomRepository roomRepository;
 
@@ -71,6 +68,34 @@ public class GameService {
         }
     }
 
+    private boolean isNumber(String string) {
+        try {
+            int number = Integer.parseInt(string);
+
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private Card extractStartCurrentCard(Deck deck) {
+        boolean isNumber = false;
+        Card finalCard = null;
+
+        while (!isNumber) {
+            Card randomCard = deckService.extractRandomCardFromDeck(deck);
+
+            if (this.isNumber(randomCard.getCardValue())) {
+                finalCard = randomCard;
+                isNumber = true;
+            } else {
+                deck.addCard(randomCard);
+            }
+        }
+
+        return finalCard;
+    }
+
     public void startGame(Room room) {
         Game newGame = new Game();
         Deck bankDeck = new Deck();
@@ -81,7 +106,7 @@ public class GameService {
         deckService.initializeBankDeck(bankDeck);
         deckRepository.save(gameDeck);
 
-        Card currentCard = deckService.extractRandomCardFromDeck(bankDeck);
+        Card currentCard = this.extractStartCurrentCard(bankDeck);
 
         newGame.setBankDeck(bankDeck);
         newGame.setGameDeck(gameDeck);
@@ -117,7 +142,7 @@ public class GameService {
         playerDeckRepository.save(playerDeck);
     }
 
-    public GameDTO getRandomCardForPlayer(long playerId, long roomId) throws PlayerDeckNotFoundException, NoAccessException, OptionalNotFoundException {
+    public Game getRandomCardForPlayer(long playerId, long roomId) throws PlayerDeckNotFoundException, NoAccessException, OptionalNotFoundException {
         Player player = playerService.getPerson(playerId);
         Room room = roomService.roomById(roomId);
         Game game = room.getGame();
@@ -130,7 +155,7 @@ public class GameService {
         game.setCurrentPlayerTurn(this.getOpponent(player, room.getUsers()));
         gameRepository.save(game);
 
-        return gameMapper.mapToDTO(game, player, room);
+        return game;
     }
 
     private Player getOpponent(Player currentPlayer, List<Player> allPlayers) {
@@ -140,15 +165,13 @@ public class GameService {
         return Objects.equals(firstPlayer.getId(), currentPlayer.getId()) ? secondPlayer : firstPlayer;
     }
 
-    public GameDTO getPlayerGame (Long userId, Long roomId) throws OptionalNotFoundException {
+    public Game getPlayerGame (Long roomId) throws OptionalNotFoundException {
         Room room = roomService.roomById(roomId);
-        Game game = room.getGame();
-        Player player = playerService.getPerson(userId);
 
-        return gameMapper.mapToDTO(game, player, room);
+        return room.getGame();
     }
 
-    public GameDTO putPlayerCard(PutCardRequest putCardRequest) throws OptionalNotFoundException, NoAccessException {
+    public Game putPlayerCard(PutCardRequest putCardRequest) throws OptionalNotFoundException, NoAccessException {
         Player player = playerService.getPerson(putCardRequest.getUserId());
         Room room = roomService.roomById(putCardRequest.getRoomId());
         Card card = cardService.getCard(putCardRequest.getCardId());
@@ -206,6 +229,6 @@ public class GameService {
         cardRepository.save(card);
         gameRepository.save(game);
 
-        return gameMapper.mapToDTO(game, player, room);
+        return game;
     }
 }
