@@ -20,14 +20,16 @@ public class PlayerRestController {
     // возвращает массив юзеров из БД
     @GetMapping("/list")
     public List<Player> list() {
-        List<Player> playerList = playerService.listPlayer();
+        List<Player> playerList = playerService.list();
         return playerList;
     }
 
 
     // создаёт нового юзера по имени и присваивает ID
-    @PostMapping("/user")  // вернуть на PostMapping после тестов
-    public PlayerDTO create(@RequestBody String name) {     //
+
+    // создаёт нового юзера по имени и присваивает ID
+    @PostMapping()  // вернуть на PostMapping после тестов
+    public PlayerDTO createNewPlayer(@RequestBody String name) {
         Player player = playerService.create(name);
         PlayerDTO playerDTO = new PlayerDTO();
         playerDTO.setName(player.getName());
@@ -35,12 +37,18 @@ public class PlayerRestController {
         return playerDTO;
     }
 
+
+    @PutMapping()
+    public PlayerDTO updateRoomId(@RequestBody PlayerDTO newPlayer){
+        return playerService.updateRoomId(newPlayer);
+    }
+
     // нужно ли описывать Entity для Optional<Player>, чтобы добавить туда getId getName для присвоения значений DTO?
     @GetMapping("/getuser")
-    public Optional<Player> getperson(@RequestParam(value = "id") Integer id) {
+    public Optional<Player> getperson(@RequestParam(value = "id") Long id) {
         //PlayerDTO playerDTO = new PlayerDTO();
         //playerDTO.setId(player.get)
-        return playerService.getPerson(id);
+        return playerService.getPlayer(id);
     }
 
 

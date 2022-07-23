@@ -1,8 +1,8 @@
 package com.back.backend.service;
 
-
-import com.back.backend.classes.Game;
+import com.back.backend.classes.Player;
 import com.back.backend.classes.Room;
+import com.back.backend.classes.repo.PlayerRepository;
 import com.back.backend.classes.repo.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,36 +16,32 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    public List<Room> listRoom() {
-        return roomRepository.findAll();
-    }
-
     public Room createRoom(String name) {
         Room room = new Room();
-        room.setGame(new Game());
         room.setName(name);
         room.setMaxCount(2);
         room.setCount(0);
         return roomRepository.save(room);
     }
 
-    public Optional<Room> roomById(long id) {
-        Room room = new Room();
-        Optional<Room> byId = roomRepository.findById(id);
-        return byId;
+    public void deleteRoom(Room room){
+        roomRepository.delete(room);
     }
 
-    public boolean compareRoomName(String roomName, String searchName) {
-        String searchNameLowCase = searchName.toLowerCase();
-        if (roomName.contains(searchName) || roomName.equalsIgnoreCase(searchName) ||
-                roomName.contains(searchNameLowCase) || roomName.equalsIgnoreCase(searchNameLowCase)) {
-            return true;
-        }
-        return false;
+    public Room roomById(Long id) {
+        Room room = new Room();
+        Optional<Room> byId = roomRepository.findById(id);
+
+        return byId.get();
     }
+
+    public Room update(Room newRoom) {
+        return roomRepository.save(newRoom);
+    }
+
     public List<Room> findByNameContaining(String name) {
 
         return roomRepository.findByNameContainingIgnoreCase(name);
     }
-
 }
+

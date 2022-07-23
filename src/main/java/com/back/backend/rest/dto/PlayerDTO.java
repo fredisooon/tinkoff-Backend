@@ -4,6 +4,8 @@ public class PlayerDTO {
     private Long id;
     private String name;
 
+    private Long roomId;
+
     public Long getId() {
         return id;
     }
@@ -18,5 +20,13 @@ public class PlayerDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
     }
 }

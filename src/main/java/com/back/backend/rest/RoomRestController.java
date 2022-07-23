@@ -1,8 +1,10 @@
 package com.back.backend.rest;
 
 
+import com.back.backend.classes.Game;
 import com.back.backend.classes.Room;
 import com.back.backend.rest.dto.RoomDTO;
+import com.back.backend.service.GameService;
 import com.back.backend.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,10 @@ public class RoomRestController {
     @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private GameService gameService;
+
+
 
     @PostMapping()
     public RoomDTO createNewRoom(@RequestBody String name) {
@@ -27,14 +33,14 @@ public class RoomRestController {
         roomDTO.setName(room.getName());
         roomDTO.setMaxCount(room.getMaxCount());
         roomDTO.setCount(room.getCount());
-        roomDTO.setGameId(room.getGame().getId());
+
         return roomDTO;
     }
 
 
     @GetMapping("{id}")
-    public RoomDTO roomById(@PathVariable Integer id) {
-        Optional<Room> optionalRoom = roomService.roomById(id);
+    public RoomDTO roomById(@PathVariable Long id) {
+        Optional<Room> optionalRoom = Optional.ofNullable(roomService.roomById(id));
         RoomDTO roomDTO = new RoomDTO();
         roomDTO.setId(optionalRoom.get().getId());
         roomDTO.setName(optionalRoom.get().getName());
