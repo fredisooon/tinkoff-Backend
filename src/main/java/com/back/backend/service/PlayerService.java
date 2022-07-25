@@ -17,27 +17,14 @@ public class PlayerService {
 
     @Autowired
     private PlayerRepository playerRepository;
-    @Autowired
-    private PlayerMapper playerMapper;
 
-
-    public List<PlayerDTO> listPlayer() {
-        List<Player> playerList = playerRepository.findAll();
-        return playerMapper.mapToDTOList(playerList);
-    }
-
-    public PlayerDTO create(String name) {
+    public Player create(String name) {
         Player player = new Player();
 
         player.setName(name);
         playerRepository.save(player);
 
-        return playerMapper.mapToDTO(player);
-    }
-
-    public PlayerDTO getPersonDTO(long id) {
-        Optional<Player> playerById = playerRepository.findById(id);
-        return playerMapper.mapToDTO(playerById.get());
+        return player;
     }
 
     public Player getPerson(long id) throws OptionalNotFoundException {

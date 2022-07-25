@@ -2,10 +2,8 @@ package com.back.backend.service;
 
 import com.back.backend.classes.Room;
 import com.back.backend.classes.repo.RoomRepository;
-import com.back.backend.utils.RoomMapper;
 import com.back.backend.exceptions.OptionalNotFoundException;
 import com.back.backend.utils.OptionalWorker;
-import com.back.backend.rest.dto.RoomDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +15,8 @@ public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
-    @Autowired
-    private RoomMapper roomMapper;
 
-    public RoomDTO createRoom(String name) {
+    public Room createRoom(String name) {
         Room room = new Room();
 
         room.setName(name);
@@ -28,7 +24,7 @@ public class RoomService {
         room.setCount(0);
         roomRepository.save(room);
 
-        return roomMapper.mapToDTO(room);
+        return room;
     }
 
     public Room roomById(long id) throws OptionalNotFoundException {
@@ -39,11 +35,7 @@ public class RoomService {
         return roomOptional.get();
     }
 
-    public RoomDTO roomByIdDTO(long id) throws OptionalNotFoundException {
-        return roomMapper.mapToDTO(this.roomById(id));
-    }
-
-    public List<RoomDTO> findByNameContaining(String name) {
-        return roomMapper.mapToDTOList(roomRepository.findByNameContainingIgnoreCase(name));
+    public List<Room> findByNameContaining(String name) {
+        return roomRepository.findByNameContainingIgnoreCase(name);
     }
 }
