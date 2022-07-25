@@ -5,7 +5,6 @@ import com.back.backend.classes.repo.*;
 import com.back.backend.exceptions.*;
 import com.back.backend.rest.requestsClasses.PutCardRequest;
 import com.back.backend.service.card.CardService;
-import com.back.backend.utils.GameMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +32,6 @@ public class GameService {
 
     @Autowired
     private PlayerDeckService playerDeckService;
-
-//    @Autowired
-//    private PlayerService playerService;
-
-//    @Autowired
-//    private RoomService roomService;
 
     @Autowired
     private CardService cardService;
