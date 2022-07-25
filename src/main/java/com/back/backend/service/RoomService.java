@@ -16,6 +16,9 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Autowired
+    private GameService gameService;
+
     public Room createRoom(String name) {
         Room room = new Room();
 
@@ -38,4 +41,16 @@ public class RoomService {
     public List<Room> findByNameContaining(String name) {
         return roomRepository.findByNameContainingIgnoreCase(name);
     }
+
+    public void checkRoomPlayersCount(Room room) {
+        if (room.getCount() == 0) {
+            roomRepository.delete(room);
+        }
+
+        if (room.getCount() == room.getMaxCount()) {
+            gameService.startGame(room);
+        }
+    }
+
+
 }

@@ -34,20 +34,21 @@ public class GameService {
     @Autowired
     private PlayerDeckService playerDeckService;
 
-    @Autowired
-    private GameMapper gameMapper;
+//    @Autowired
+//    private PlayerService playerService;
 
-    @Autowired
-    private PlayerService playerService;
-
-    @Autowired
-    private RoomService roomService;
+//    @Autowired
+//    private RoomService roomService;
 
     @Autowired
     private CardService cardService;
 
     @Autowired
     private CardRepository cardRepository;
+
+    @Autowired
+    private PlayerRepository playerRepository;
+
 
     private void fillPlayersDeck(Game game, List<Player> players, Deck bankDeck) {
         final int START_GAME_CARDS_COUNT = 7;
@@ -143,8 +144,8 @@ public class GameService {
     }
 
     public Game getRandomCardForPlayer(long playerId, long roomId) throws PlayerDeckNotFoundException, NoAccessException, OptionalNotFoundException {
-        Player player = playerService.getPerson(playerId);
-        Room room = roomService.roomById(roomId);
+        Player player = playerRepository.findById(playerId).get();
+        Room room = roomRepository.findById(roomId).get();
         Game game = room.getGame();
 
         if (!Objects.equals(game.getCurrentPlayerTurn().getId(), player.getId())) {
@@ -166,14 +167,15 @@ public class GameService {
     }
 
     public Game getPlayerGame (Long roomId) throws OptionalNotFoundException {
-        Room room = roomService.roomById(roomId);
+        Room room = roomRepository.findById(roomId).get();
 
         return room.getGame();
     }
 
     public Game putPlayerCard(PutCardRequest putCardRequest) throws OptionalNotFoundException, NoAccessException {
-        Player player = playerService.getPerson(putCardRequest.getUserId());
-        Room room = roomService.roomById(putCardRequest.getRoomId());
+        Player player = playerRepository.findById(putCardRequest.getUserId()).get();
+        Room room = roomRepository.findById(putCardRequest.getRoomId()).get();
+
         Card card = cardService.getCard(putCardRequest.getCardId());
         Game game = room.getGame();
         Deck playerDeck = playerDeckService.getPlayerDeck(player, game).getDeck();

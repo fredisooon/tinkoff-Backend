@@ -1,7 +1,12 @@
 package com.back.backend.service;
 
 import com.back.backend.classes.Player;
+import com.back.backend.classes.Room;
 import com.back.backend.classes.repo.PlayerRepository;
+import com.back.backend.classes.repo.RoomRepository;
+import com.back.backend.exceptions.OptionalNotFoundException;
+import com.back.backend.rest.dto.PlayerDTO;
+import com.back.backend.utils.OptionalWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +18,13 @@ public class PlayerService {
 
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Autowired
+    private RoomService roomService;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
 
     public Player create(String name) {
         Player player = new Player();
@@ -40,43 +52,29 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
-    public PlayerDTO updateRoomId(PlayerDTO newPlayer){
-        Optional<Player> currentPlayer = getPlayer(newPlayer.getId());
-        Room room;
+    public Player updateRoomId(PlayerDTO newPlayer) throws OptionalNotFoundException {
+        Player player = this.getPerson(newPlayer.getId());
 
-        PlayerDTO playerDTO = new PlayerDTO();
+        if (player.getRoom() == null && newPlayer.getRoomId() != null) {
+            Optional<Room> newRoomOptional = roomRepository.findById(newPlayer.getRoomId());
+            Room newRoom = newRoomOptional.orElseGet(Room::new);
 
-        if (newPlayer.getRoomId() != null){
-            room = roomService.roomById(newPlayer.getRoomId());
-            room.addPlayer(currentPlayer.get());
-            roomService.update(room);
+            newRoom.addPlayer(player);
+            roomRepository.save(newRoom);
+            playerRepository.save(player);
 
-            playerDTO.setId(currentPlayer.get().getId());
-            playerDTO.setName(currentPlayer.get().getName());
-            playerDTO.setRoomId(currentPlayer.get().getRoom().getId());
-        }
-        else  {
-            room = roomService.roomById(currentPlayer.get().getRoom().getId());
-            room.removePlayer(currentPlayer.get());
-            roomService.update(room);
+            roomService.checkRoomPlayersCount(newRoom);
+        } else {
+            Room oldRoom = player.getRoom();
+            oldRoom.removePlayer(player);
 
-            playerDTO.setId(currentPlayer.get().getId());
-            playerDTO.setName(currentPlayer.get().getName());
-            playerDTO.setRoomId(null);
+            roomRepository.save(oldRoom);
+            playerRepository.save(player);
+
+            roomService.checkRoomPlayersCount(oldRoom);
         }
 
-        checkPlayersCount(room);
-
-        return playerDTO;
-    }
-
-    public void checkPlayersCount(Room room){
-        if (room.getCount() == 0){
-            roomService.deleteRoom(room);
-        }
-         if (room.getCount() == room.getMaxCount()) {
-             // Метод по старту игры
-         }
+        return player;
     }
 }
 

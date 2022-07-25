@@ -36,8 +36,15 @@ public class PlayerRestController {
     }
 
     @PutMapping()
-    public PlayerDTO updateRoomId(@RequestBody PlayerDTO newPlayer){
-        return playerService.updateRoomId(newPlayer);
+    public ResponseEntity updateRoomId(@RequestBody PlayerDTO newPlayer){
+        try {
+            Player player = playerService.updateRoomId(newPlayer);
+            PlayerDTO playerDTO = playerMapper.mapToDTO(player);
+
+            return ResponseEntity.ok(playerDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Не получилось обновить игрока игрока");
+        }
     }
 
 }

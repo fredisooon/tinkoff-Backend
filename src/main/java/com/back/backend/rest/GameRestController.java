@@ -51,7 +51,7 @@ public class GameRestController {
     @PutMapping("/card")
     public ResponseEntity putCard(@RequestBody PutCardRequest requestData) {
         try {
-            Game game = gameService.getPlayerGame(requestData.getRoomId());
+            Game game = gameService.putPlayerCard(requestData);
             GameDTO gameDTO = gameMapper.mapToDTO(game, requestData.getUserId(), requestData.getRoomId());
 
             return ResponseEntity.ok(gameDTO);

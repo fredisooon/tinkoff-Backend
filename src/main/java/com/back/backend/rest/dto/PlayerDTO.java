@@ -15,8 +15,6 @@ public class PlayerDTO {
 
     }
 
-    private Long roomId;
-
     public Long getId() {
         return id;
     }
