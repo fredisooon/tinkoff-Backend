@@ -16,7 +16,7 @@ public class Game {
     @OneToOne(cascade = CascadeType.ALL)
     private Deck gameDeck;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Card currentCard;
 
     @OneToOne(cascade = CascadeType.ALL)

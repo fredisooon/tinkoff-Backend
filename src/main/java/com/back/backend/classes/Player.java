@@ -30,9 +30,7 @@ public class Player {
         this.room = roomId;
     }
 
-    public Player() {
-
-    }
+    public Player() {}
 
     public String getName() {
         return name;

@@ -20,21 +20,17 @@ public class Room {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
     private List<Player> players = new ArrayList<>();
 
-    public Room(Long id) {
-        this.id = id;
-    }
-
 
     public void addPlayer(Player player) {
         this.players.add(player);
+        this.count += 1;
         player.setRoom(this);
-        this.count++;
     }
 
     public void removePlayer(Player player) {
         this.players.remove(player);
+        this.count -= 1;
         player.setRoom(null);
-        this.count--;
     }
 
     public List<Player> getUsers() {

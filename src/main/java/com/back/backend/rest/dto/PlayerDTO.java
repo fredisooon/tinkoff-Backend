@@ -3,6 +3,17 @@ package com.back.backend.rest.dto;
 public class PlayerDTO {
     private Long id;
     private String name;
+    private Long roomId;
+
+    public PlayerDTO(Long id, String name, Long roomId) {
+        this.id = id;
+        this.name = name;
+        this.roomId = roomId;
+    }
+
+    public PlayerDTO() {
+
+    }
 
     private Long roomId;
 

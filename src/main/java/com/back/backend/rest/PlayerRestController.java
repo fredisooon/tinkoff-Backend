@@ -3,8 +3,11 @@ package com.back.backend.rest;
 
 import com.back.backend.classes.Player;
 import com.back.backend.rest.dto.PlayerDTO;
+import com.back.backend.rest.requestsClasses.CreatePlayerRequest;
 import com.back.backend.service.PlayerService;
+import com.back.backend.utils.PlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,39 +20,24 @@ public class PlayerRestController {
     @Autowired
     private PlayerService playerService;
 
-    // возвращает массив юзеров из БД
-    @GetMapping("/list")
-    public List<Player> list() {
-        List<Player> playerList = playerService.list();
-        return playerList;
+    @Autowired
+    private PlayerMapper playerMapper;
+
+    @PostMapping()
+    public ResponseEntity create(@RequestBody CreatePlayerRequest createPlayerRequest) {
+        try {
+            Player player = playerService.create(createPlayerRequest.getName());
+            PlayerDTO playerDTO = playerMapper.mapToDTO(player);
+
+            return ResponseEntity.ok(playerDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Не получилось создать игрока");
+        }
     }
-
-
-    // создаёт нового юзера по имени и присваивает ID
-
-    // создаёт нового юзера по имени и присваивает ID
-    @PostMapping()  // вернуть на PostMapping после тестов
-    public PlayerDTO createNewPlayer(@RequestBody String name) {
-        Player player = playerService.create(name);
-        PlayerDTO playerDTO = new PlayerDTO();
-        playerDTO.setName(player.getName());
-        playerDTO.setId(player.getId());
-        return playerDTO;
-    }
-
 
     @PutMapping()
     public PlayerDTO updateRoomId(@RequestBody PlayerDTO newPlayer){
         return playerService.updateRoomId(newPlayer);
     }
-
-    // нужно ли описывать Entity для Optional<Player>, чтобы добавить туда getId getName для присвоения значений DTO?
-    @GetMapping("/getuser")
-    public Optional<Player> getperson(@RequestParam(value = "id") Long id) {
-        //PlayerDTO playerDTO = new PlayerDTO();
-        //playerDTO.setId(player.get)
-        return playerService.getPlayer(id);
-    }
-
 
 }

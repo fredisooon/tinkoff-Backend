@@ -2,9 +2,18 @@ package com.back.backend.rest.dto;
 
 public class CardDTO {
     private Integer id;
-    private Integer value;
+    private String cardValue;
     private String color;
-    private String linkToImg;
+    private String img;
+
+    public CardDTO(Integer id, String cardValue, String color, String img) {
+        this.id = id;
+        this.cardValue = cardValue;
+        this.color = color;
+        this.img = img;
+    }
+
+    public CardDTO() {}
 
     public Integer getId() {
         return id;
@@ -14,12 +23,12 @@ public class CardDTO {
         this.id = id;
     }
 
-    public Integer getValue() {
-        return value;
+    public String getCardValue() {
+        return cardValue;
     }
 
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setCardValue(String cardValue) {
+        this.cardValue = cardValue;
     }
 
     public String getColor() {
@@ -30,11 +39,11 @@ public class CardDTO {
         this.color = color;
     }
 
-    public String getLinkToImg() {
-        return linkToImg;
+    public String getImg() {
+        return img;
     }
 
-    public void setLinkToImg(String linkToImg) {
-        this.linkToImg = linkToImg;
+    public void setImg(String img) {
+        this.img = img;
     }
 }

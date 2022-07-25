@@ -1,13 +1,9 @@
 package com.back.backend.service;
 
 import com.back.backend.classes.Player;
-import com.back.backend.classes.Room;
 import com.back.backend.classes.repo.PlayerRepository;
-import com.back.backend.rest.dto.PlayerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,24 +14,21 @@ public class PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
 
-    @Autowired
-    private RoomService roomService;
-
-    public List<Player> list() {
-        return playerRepository.findAll();
-    }
-
     public Player create(String name) {
         Player player = new Player();
+
         player.setName(name);
-        Player save = playerRepository.save(player);
-        return save;
+        playerRepository.save(player);
+
+        return player;
     }
 
-    public Optional<Player> getPlayer(Long id) {
-        Player player = new Player();
-        Optional<Player> byId = playerRepository.findById(id);
-        return byId;
+    public Player getPerson(long id) throws OptionalNotFoundException {
+        Optional<Player> playerOptional = playerRepository.findById(id);
+
+        OptionalWorker.checkOptional(playerOptional);
+
+        return playerOptional.get();
     }
 
     public Player update(PlayerDTO newPlayer, Room room) {

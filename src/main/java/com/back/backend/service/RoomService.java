@@ -1,9 +1,9 @@
 package com.back.backend.service;
 
-import com.back.backend.classes.Player;
 import com.back.backend.classes.Room;
-import com.back.backend.classes.repo.PlayerRepository;
 import com.back.backend.classes.repo.RoomRepository;
+import com.back.backend.exceptions.OptionalNotFoundException;
+import com.back.backend.utils.OptionalWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,30 +18,24 @@ public class RoomService {
 
     public Room createRoom(String name) {
         Room room = new Room();
+
         room.setName(name);
         room.setMaxCount(2);
         room.setCount(0);
-        return roomRepository.save(room);
+        roomRepository.save(room);
+
+        return room;
     }
 
-    public void deleteRoom(Room room){
-        roomRepository.delete(room);
-    }
+    public Room roomById(long id) throws OptionalNotFoundException {
+        Optional<Room> roomOptional = roomRepository.findById(id);
 
-    public Room roomById(Long id) {
-        Room room = new Room();
-        Optional<Room> byId = roomRepository.findById(id);
+        OptionalWorker.checkOptional(roomOptional);
 
-        return byId.get();
-    }
-
-    public Room update(Room newRoom) {
-        return roomRepository.save(newRoom);
+        return roomOptional.get();
     }
 
     public List<Room> findByNameContaining(String name) {
-
         return roomRepository.findByNameContainingIgnoreCase(name);
     }
 }
-
