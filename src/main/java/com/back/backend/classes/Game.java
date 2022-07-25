@@ -19,7 +19,7 @@ public class Game {
     @OneToOne
     private Card currentCard;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Player currentPlayerTurn;
 
     public Game() {}
